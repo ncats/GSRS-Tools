@@ -2,12 +2,11 @@ import requests
 import json
 import time
 import csv
-
+from headers import headerspost
 # Common base URL and headers
 BASE_URL = "http://gsrs-uat.preprod.fda.gov/api/v1/substances"
-COMMON_HEADERS = {'auth-key':"xxxxxx",'auth-username':'xxxxxx','Accept': 'application/json'}  # Basic common headers
-
-
+input_file="api_requests.csv"
+output_file="api_responses.csv"
 def make_api_request(test_title, endpoint, headers_json, request_type="GET", data=None):
     try:
         url = f"{BASE_URL}{endpoint}"
@@ -18,7 +17,7 @@ def make_api_request(test_title, endpoint, headers_json, request_type="GET", dat
         if request_type == "POST" and data:
             data = json.dumps(data)  # Ensure the data is a properly formatted JSON string
 
-        response = requests.request(method=request_type, url=url, headers=combined_headers, data=data, verify=False)
+        response = requests.request(method=request_type, url=url, headers=headerspost, data=data, verify=False)
         
         end_time = time.time()
         elapsed_time = end_time - start_time
@@ -47,6 +46,7 @@ def read_api_requests(filename):
                 print("Original JSON:", row['Data'])  # Debug print
                 clean_json = ''.join(row['Data'].split())
                 row['Data'] = json.loads(clean_json) if row['Data'] else None
+                    
             except json.JSONDecodeError as e:
                 print("Cleaned JSON:", clean_json)  # Debug print
                 print(f"Error parsing JSON for row {row['Title']}: {e}")
@@ -54,7 +54,7 @@ def read_api_requests(filename):
             yield row
 
 
-def write_to_csv(data, filename="api_responses8-23-2.csv",encoding='utf-8', errors='ignore'):
+def write_to_csv(data, filename=output_file,encoding='utf-8', errors='ignore'):
     with open(filename, mode='w', newline='') as file:
         fieldnames = ['Title', 'URL', 'Status Code', 'Response Text', 'Elapsed Time']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -62,8 +62,8 @@ def write_to_csv(data, filename="api_responses8-23-2.csv",encoding='utf-8', erro
         for row in data:
             writer.writerow(row)
 
-# Reading request configurations from CSV
-request_configurations = read_api_requests("api_requests.csv")
+
+request_configurations = read_api_requests(input_file)  ### read from api_requests.csv
 
 # Execute requests and collect responses
 responses = [
