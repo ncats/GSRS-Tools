@@ -2,22 +2,22 @@ import requests
 import json
 import time
 import csv
-from headers import headerspost
+from  test_config import headerspost, SERVER_URL, input_path, output_path, verify_flag
 # Common base URL and headers
-BASE_URL = "http://gsrs-uat.preprod.fda.gov/api/v1/substances"
-input_file="api_requests.csv"
-output_file="api_responses.csv"
+BASE_URL= SERVER_URL+"api/v1/substances"
+input_file=input_path+"api_requests.csv"
+output_file=output_path+"api_responses.csv"
 def make_api_request(test_title, endpoint, headers_json, request_type="GET", data=None):
     try:
         url = f"{BASE_URL}{endpoint}"
         headers = json.loads(headers_json) if headers_json else {}
-        combined_headers = {**COMMON_HEADERS, **headers}
+        #combined_headers = {**COMMON_HEADERS, **headers}
         start_time = time.time()
 
         if request_type == "POST" and data:
             data = json.dumps(data)  # Ensure the data is a properly formatted JSON string
 
-        response = requests.request(method=request_type, url=url, headers=headerspost, data=data, verify=False)
+        response = requests.request(method=request_type, url=url, headers=headerspost, data=data, verify=verify_flag)
         
         end_time = time.time()
         elapsed_time = end_time - start_time

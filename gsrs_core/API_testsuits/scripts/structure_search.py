@@ -1,18 +1,18 @@
 import requests
 import json
 import csv
-from sample_headers import headerspost
+from  test_config import headerspost, SERVER_URL, input_path, output_path, verify_flag
 
 
-csv_file_path = 'data_elements.csv'
-base_url = "https://gsrs-uat.preprod.fda.gov/api/v1/substances/interpretStructure"
-base_url2 = "https://gsrs-uat.preprod.fda.gov/api/v1/substances/structureSearch"
+csv_file_path = input_path + 'sample_data.csv'
+base_url = SERVER_URL + "api/v1/substances/interpretStructure"
+base_url2 = SERVER_URL + "api/v1/substances/structureSearch"
 with open(csv_file_path, mode='r') as file:
     csv_reader = csv.DictReader(file)      
     for index, row in enumerate(csv_reader, start=1):
         data = row['smiles']
         query_params1 = {}
-        response = requests.post(base_url, headers=headerspost, params=query_params1, data=data, verify=False)        
+        response = requests.post(base_url, headers=headerspost, params=query_params1, data=data, verify=verify_flag)
         if response.status_code == 200:
             print(data, f"Request {index} was successful!")
             response_dict = json.loads(response.text)
@@ -30,7 +30,7 @@ with open(csv_file_path, mode='r') as file:
             "type": "structuresearch",
             "smiles": data
         }
-        response1 = requests.get(base_url2, headers=headerspost, params=query_params, data=data, verify=False)
+        response1 = requests.get(base_url2, headers=headerspost, params=query_params, data=data, verify=verify_flag)
         
         if response1.status_code == 200:
             print(f"Request {index} (GET) was successful!", data)
