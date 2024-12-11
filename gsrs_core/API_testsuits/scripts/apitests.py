@@ -2,11 +2,11 @@ import requests
 import json
 import time
 import csv
-from  test_config import headerspost, SERVER_URL, input_path, output_path, verify_flag
+from test_config import headerspost, SERVER_URL, input_path, output_path, verify_flag
 # Common base URL and headers
-BASE_URL= SERVER_URL+"api/v1/substances"
-input_file=input_path+"api_requests.csv"
-output_file=output_path+"api_responses.csv"
+BASE_URL = SERVER_URL + "api/v1/substances"
+input_file = input_path + "api_requests.csv"
+output_file = output_path + "api_responses.csv"
 def make_api_request(test_title, endpoint, headers_json, request_type="GET", data=None):
     try:
         url = f"{BASE_URL}{endpoint}"

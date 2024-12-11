@@ -1,7 +1,7 @@
 import requests
 import json
 import csv
-from  test_config import headerspost, SERVER_URL, input_path, output_path, verify_flag
+from test_config import headerspost, SERVER_URL, input_path, output_path, verify_flag
 
 
 csv_file_path = input_path + 'sample_data.csv'
