@@ -1,5 +1,5 @@
 # [URL]
-#SERVER_URL="http://gsrs-uat.preprod.fda.gov/"
+SERVER_URL="http://gsrs-uat.preprod.fda.gov/"
 headerspost = {'auth-key':"your_key",'auth-username':'your_login', 'content-type': 'text/plain'}
 
 # [input and output]
