@@ -41,7 +41,7 @@ def upload_files_in_batches(data_list, batch_size, url, headers):
 if __name__ == "__main__":
     batch_size = 50
     urlPROD = 'https://gsrs.fda.gov/api/v1/products'  
-    headersPROD = {'auth-key':"CWHG1Lrkri5uMyjiJeOP",'auth-username':'Arunasri.Nishtala', 'Content-Type':'application/json'}
+    #headersPROD = {} #headers via seperate file
     try:
         
         data_zip_path = 'C:\\Users\\Arunasri.Nishtala\\Desktop\\Products\\SPLxml7-11-24\\only_xmls\\data9_productlevel_123k2.zip'
