@@ -1,0 +1,4 @@
+Title,Endpoint,Headers,Request Type,Data
+Name Retrieval,/044e6d9c-37c0-42ac-848e-2e41937216b1/names,"{""Content-Type"":""application/json""}",GET,
+Entity Information,/044e6d9c-37c0-42ac-848e-2e41937216b1,"{""Content-Type"":""application/json""}",GET,
+Count Substances,/@count,{},GET,
