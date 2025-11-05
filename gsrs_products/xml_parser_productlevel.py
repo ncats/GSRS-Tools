@@ -1,12 +1,40 @@
 import os
+import sys
 import json
 import csv
 import xml.etree.ElementTree as ET
 from datetime import datetime
 import zipfile
+import requests
+
+"""
+Set these values to pass credential and URL values  
+
+export DEBUG=FALSE 
+export REQUEST_METHOD=POST # or PUT
+export AUTH_USERNAME=admin
+export AUTH_METHOD=password # or key
+export AUTH_PASSWORD=XXXXXX
+export AUTH_KEY=XXXXXX
+export TARGET_URL="http://localhost:8081/ginas/app/api/v1/products"
+"""
+
+
+
+# Load your CSV data if needed (Not currently used at FDA because we do UNII lookup automatically)
+csv_file_path = 'Substance_UUID_UNII_Production.csv'
+
+useDataDictionary = False
+useSubstanceKeyType='APPROVAL_ID'
+
+# If you are uploading large amounts of data it is better to NOT use useAutoload 
+# Instead, set to False and allow this script to write jsons to the filename set in variable output_zip, e.g. jsons.zip 
+# Then, run the "uploader.py" script to upload using a threaded/async procedure.  
+useAutoload = False
 
 # HL7
 HL7 = {'hl7': 'urn:hl7-org:v3'}
+
 
 # Log file
 def log_to_file(log_file, message):
@@ -120,7 +148,10 @@ def parse_xml_file(file_path, data_dictionary, log_file_path):
                             if ingredientTypeXML == 'ACTIR':
                                 asEquivalentSubstance = ingredient_substance.find('.//hl7:asEquivalentSubstance', HL7)
                                 asEquivalentSubstance_code = asEquivalentSubstance.find('.//hl7:code',HL7).get('code')
-                                basis_of_strength_unii = data_dictionary[asEquivalentSubstance_code]
+                                if(useDataDictionary):
+                                    basis_of_strength_unii = data_dictionary[asEquivalentSubstance_code]
+                                else:
+                                    basis_of_strength_unii = asEquivalentSubstance_code        
                                 #print('ACTIR',basis_of_strength_unii)
                         
                         try:
@@ -131,11 +162,11 @@ def parse_xml_file(file_path, data_dictionary, log_file_path):
                             if ingredient_substance is not None or quantity is not None or active_moiety is not None:                            
                                 Substance = {
                                     'applicantIngredName': ingredient_substance.find('.//hl7:name', HL7).text,
-                                    'substanceKeyType': 'UUID',
+                                    'substanceKeyType': useSubstanceKeyType,
                                     'ingredientType' : ingredientType.upper(),
-                                    'substanceKey': data_dictionary[ingredient_substance.find('.//hl7:code',HL7).get('code')],
+                                    'substanceKey': data_dictionary[ingredient_substance.find('.//hl7:code',HL7).get('code')] if useDataDictionary else ingredient_substance.find('.//hl7:code',HL7).get('code'),
                                     'basisOfStrengthSubstanceKey': basis_of_strength_unii,
-                                    'basisOfStrengthSubstanceKeyType': 'UUID',
+                                    'basisOfStrengthSubstanceKeyType': useSubstanceKeyType,
                                     'originalNumeratorNumber': quantity.find('.//hl7:numerator',HL7).get('value') if quantity is not None else '',
                                     'originalNumeratorUnit': (quantity.find('.//hl7:numerator',HL7).get('unit')).upper() if quantity is not None else '',
                                     'originalDenominatorNumber': quantity.find('.//hl7:denominator',HL7).get('value','na') if quantity is not None else '',
@@ -223,6 +254,7 @@ def parse_xml_file(file_path, data_dictionary, log_file_path):
                                                     "documentType": "SET ID"
                                                 }
                                             ],
+                                            "productIndications": [],
                                             "provenance": "XML_SPL",
                                             "productStatus": XML_values.get('marketingStatus', '').upper(),
                                             "productType": XML_values.get('Product_Type', '').upper().replace(substring_to_remove, ''),
@@ -252,14 +284,19 @@ def parse_xml_file(file_path, data_dictionary, log_file_path):
                                             "dosageForm": XML_values.get('DosageForm', '').upper(),
                                             "charNumFragments": XML_values.get('SPLIMPRINT', ''),
                                             "charShape": XML_values.get('SPLSHAPE', '').upper(),
-                                            "charSize": XML_values.get('SPLSIZE', ''),
                                             "charColor": XML_values.get('SPLCOLOR', '').upper(),
                                             "routeOfAdministration": XML_values.get('routeAdmin', '').upper()
                                         }
                                     ]
-                                }
+                                }  
+                        if (useAutoload):
+                            response=requests.post(updateUrl, json=GSRSProduct ,headers=updateHeaders, verify=verifySsl)
+                            print (json.dumps(GSRSProduct)) 
+                            print ("status code") 
+                            print (response.status_code)
+                        
                     except Exception as e:
-                        print(f"[ERROR] Failed to create GSRSProduct. Error: {str(e)}")
+                        log_to_file(f"[ERROR] Failed to create GSRSProduct. Error: {str(e)}")
                         GSRSProduct = {}
         log_message=f"[SUCCESS] parse XML file: {file_path}"
         log_to_file(log_file_path, log_message)                
@@ -273,14 +310,38 @@ def parse_xml_file(file_path, data_dictionary, log_file_path):
     # Return the constructed GSRSProduct JSON
     return GSRSProduct
 
-# Function to process multiple XML files
-def process_xml_files(folder_path, data_dictionary, log_file_path):
+def process_xml_files_list_dir(folder_path, data_dictionary, log_file_path):
     xml_files = [filename for filename in os.listdir(folder_path) if filename.endswith(".xml")]
     parsed_data = []
     for filename in xml_files:
         file_path = os.path.join(folder_path, filename)
         parsed_data.append(parse_xml_file(file_path, data_dictionary, log_file_path))
     return parsed_data
+
+def find_all_xml_files_os_walk(folder_path):
+    file_paths = []
+    for dirpath, dirnames, filenames in os.walk(folder_path):
+        for filename in filenames:
+            if filename.endswith(".xml"):
+                file_paths.append(os.path.join(dirpath, filename))
+    return file_paths
+
+
+def process_xml_files_walk(folder_path, data_dictionary, log_file_path):
+    xml_files = find_all_xml_files_os_walk(folder_path)
+    parsed_data = []
+    for file_path in xml_files:
+        parsed_data.append(parse_xml_file(file_path, data_dictionary, log_file_path))
+    return parsed_data
+
+
+# Function to process multiple XML files
+def process_xml_files(folder_path, data_dictionary, log_file_path):
+    if (xml_find_method == 'walk'):
+        return process_xml_files_walk(folder_path, data_dictionary, log_file_path)
+    else:
+        return process_xml_files_listdir(folder_path, data_dictionary, log_file_path)	    
+
 
 # Function to save parsed data as JSON files in a zip archive
 def save_data_as_zip(data_list, output_zip):
@@ -306,15 +367,73 @@ def load_data_from_zip(zip_file_path):
 
 # Entry point for XML parsing
 if __name__ == "__main__":
-    folder_path = 'C:\\Users\\Arunasri.Nishtala\\Desktop\\Products\\SPLxml7-11-24\\only_xmls\\only_xmls'
-    log_file_path = 'C:\\Users\\Arunasri.Nishtala\\Desktop\\Products\\SPLxml7-11-24\\only_xmls\\log_11-1-5_34pm.txt'
-    output_zip = 'C:\\Users\\Arunasri.Nishtala\\Desktop\\Products\\SPLxml7-11-24\\only_xmls\\complete_product11-1-5_34pm.zip'
 
-    # Load your CSV data if needed
-    csv_file_path = 'C:\\Users\\Arunasri.Nishtala\\Desktop\\Products\\Substance_UUID_UNII_Production.csv'
-    key_column = 'UNII'
-    value_column = 'UUID'
-    data_dictionary = csv_to_transformed_dict(csv_file_path, key_column, value_column)
+    # ===  common config info / begin   
+
+    # In this script, you only need to worry about these 
+    # values if you are setting useAutoload to True. 
+    # You are better off using the uploader.py script instead.
+
+    _debug=debug=os.environ.get('DEBUG')
+    if (_debug==None): 
+      _debug='FALSE' 
+    debug=False
+    if (_debug.upper()=='TRUE'):
+       debug=True
+    request_method=os.environ.get('REQUEST_METHOD')
+    if (request_method==None): 
+       request_method='POST'
+
+    auth_username=os.environ.get('AUTH_USERNAME')
+    auth_password=os.environ.get('AUTH_PASSWORD') 
+    auth_key=os.environ.get('AUTH_KEY')
+    auth_method=os.environ.get('AUTH_METHOD')
+    auth_credential=''
+    if (auth_method=='password'): 
+       auth_credential={'auth-password': auth_password}
+    if (auth_method=='key'): 
+       auth_credential={'auth-key': auth_key}
+    target_url=os.environ.get('TARGET_URL')
+    headers={'auth-username': auth_username, 'content-type': 'application/json'} 
+    headers.update(auth_credential)
+    config_vars = 'debug request_method auth_username auth_password auth_key auth_method target_url' 
+
+    if(debug): 
+      print("=== Config vars ===") 
+      for var in config_vars.split(" "): 
+        print ("{}: {}".format(var,  str(locals()[var])))
+      print("===")
+
+    # ===  common config info / end   
+
+    updateHeaders = headers
+    updateUrl = target_url
+    verifySsl = False
+
+    # Handle input folder and output zipfile path
+
+    if len(sys.argv) != 3:
+        print(f"Usage: {sys.argv[0]} <input_folder> <output_zipfile_path>")
+        print(f"\nExample: python3 $code/xml_parser_productlevel.py  ./processed-xml/all_dailymed_human_rx processed-json-zip/all_dailymed_human_rx-jsons.zip")
+        sys.exit(1)
+
+    input_folder, output_zipfile_path = sys.argv[1], sys.argv[2]
+
+
+    folder_path = input_folder
+    output_zip = output_zipfile_path
+    xml_find_method='walk'
+    log_file_path = 'log.parser.txt'
+
+
+
+    data_dictionary = { }
+    if (useDataDictionary):
+        # Does this change, can we use useSubstanceKeyType value? 
+        key_column = 'UNII'  
+        value_column = 'UUID'
+        data_dictionary = csv_to_transformed_dict(csv_file_path, key_column, value_column)
+    
 
     # Process XML files and create zip archive with JSONs
     parsed_data = process_xml_files(folder_path, data_dictionary, log_file_path)
