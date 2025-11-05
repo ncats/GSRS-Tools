@@ -128,11 +128,11 @@ def process_all_dailymed_homeopathic():
     remote_file="dm_spl_release_homeopathic.zip"
     stem = Path(remote_file).stem
     extractXmlsFromFile(remote_file)
-        output_folder_name='all_dailymed_homeopathic'
-        output_base_path_string = 'processed-xml/' + output_folder_name
-        output_base_path = Path(output_base_path_string)
-        output_base_path.mkdir(parents=True, exist_ok=True)
-        shutil.move('xml-files3',  output_base_path / stem)
+    output_folder_name='all_dailymed_homeopathic'
+    output_base_path_string = 'processed-xml/' + output_folder_name
+    output_base_path = Path(output_base_path_string)
+    output_base_path.mkdir(parents=True, exist_ok=True)
+    shutil.move('xml-files3',  output_base_path / stem)
 
 def download_all_dailymed_animal():
     remote_file="dm_spl_release_animal.zip"
