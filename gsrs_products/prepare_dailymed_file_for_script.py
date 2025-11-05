@@ -89,16 +89,17 @@ def download(url):
     print (output)
 
 def download_all_dailymed_human_rx():
-    for i in range(3, 6):
+    for i in range(1, 6):
         remote_file="dm_spl_release_human_rx_part" + str(i) + ".zip"
         download("https://dailymed-data.nlm.nih.gov/public-release-files/" + remote_file)
 
 def process_all_dailymed_human_rx():
-    for i in range(3, 6):
+    for i in range(1, 6):
         remote_file="dm_spl_release_human_rx_part" + str(i) + ".zip"
         stem = Path(remote_file).stem
         extractXmlsFromFile(remote_file)
-        output_base_path_string = 'processed/all_dailymed_human_rx'
+        output_folder_name='all_dailymed_human_rx'
+        output_base_path_string = 'processed-xml/' + output_folder_name
         output_base_path = Path(output_base_path_string)
         output_base_path.mkdir(parents=True, exist_ok=True)
         shutil.move('xml-files3',  output_base_path / stem)
@@ -113,7 +114,11 @@ def process_all_dailymed_human_otc():
         remote_file="dm_spl_release_human_otc_part" + str(i) + ".zip"
         stem = Path(remote_file).stem
         extractXmlsFromFile(remote_file)
-        shutil.move('xml-files3', 'processed/' + stem)
+        output_folder_name='all_dailymed_human_otc'
+        output_base_path_string = 'processed-xml/' + output_folder_name
+        output_base_path = Path(output_base_path_string)
+        output_base_path.mkdir(parents=True, exist_ok=True)
+        shutil.move('xml-files3',  output_base_path / stem)
 
 def download_all_dailymed_homeopathic():
     remote_file="dm_spl_release_homeopathic.zip"
@@ -123,7 +128,11 @@ def process_all_dailymed_homeopathic():
     remote_file="dm_spl_release_homeopathic.zip"
     stem = Path(remote_file).stem
     extractXmlsFromFile(remote_file)
-    shutil.move('xml-files3', 'processed/' + stem)
+        output_folder_name='all_dailymed_homeopathic'
+        output_base_path_string = 'processed-xml/' + output_folder_name
+        output_base_path = Path(output_base_path_string)
+        output_base_path.mkdir(parents=True, exist_ok=True)
+        shutil.move('xml-files3',  output_base_path / stem)
 
 def download_all_dailymed_animal():
     remote_file="dm_spl_release_animal.zip"
@@ -133,7 +142,11 @@ def process_all_dailymed_animal():
     remote_file="dm_spl_release_animal.zip"
     stem = Path(remote_file).stem
     extractXmlsFromFile(remote_file)
-    shutil.move('xml-files3', 'processed/' + stem)
+    output_folder_name='all_dailymed_animal'
+    output_base_path_string = 'processed-xml/' + output_folder_name
+    output_base_path = Path(output_base_path_string)
+    output_base_path.mkdir(parents=True, exist_ok=True)
+    shutil.move('xml-files3',  output_base_path / stem)
 
 def download_all_dailymed_remainder():
     remote_file="dm_spl_release_remainder.zip"
@@ -143,7 +156,11 @@ def process_all_dailymed_remainder():
     remote_file="dm_spl_release_remainder.zip"
     stem = Path(remote_file).stem
     extractXmlsFromFile(remote_file)
-    shutil.move('xml-files3', 'processed/' + stem)
+    output_folder_name='all_dailymed_remainder'
+    output_base_path_string = 'processed-xml/' + output_folder_name
+    output_base_path = Path(output_base_path_string)
+    output_base_path.mkdir(parents=True, exist_ok=True)
+    shutil.move('xml-files3',  output_base_path / stem)
 
 
 def all_dailymed_human_rx():
