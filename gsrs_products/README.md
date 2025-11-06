@@ -23,6 +23,19 @@ In the steps below, we focus on one DailyMed data group: `_human_rx`.  You would
 
 ### Step 1 -- Download and extract the XML files
 
+DailyMed data is available at this link.
+
+Notice that data in each grouping is often broken up into numerous Zip files. Make sure the prepare script loops the right number of times. For example for _human_rx, the are currently five files, and thus the range is 1 to 6.  This may change as the number of products increases. Until we improve behavior, please verify in the code. 
+
+```
+  def download_all_dailymed_human_rx():
+      for i in range(1, 6):
+          remote_file="dm_spl_release_human_rx_part" + str(i) + ".zip"
+          download("https://dailymed-data.nlm.nih.gov/public-release-files/" + remote_file)
+```
+
+Here is an example of how to run for `_human_rx`:
+
 ```
 python3 $code/prepare_dailymed_file_for_script.py all_dailymed_human_rx
 ```
@@ -41,6 +54,15 @@ processed-xml
     ... 
 ```
 
+The script `prepare_dailymed_file_for_script.py` currently facilitates downloading for these five groups:
+
+- all_dailymed_human_rx
+- all_dailymed_human_otc
+- all_dailymed_homeopathic
+- all_dailymed_animal
+- all_dailymed_remainder
+
+
 ### Step 2 -- Convert DailyMed XMLs to JSON and place them in a Zip file
 
 ```
@@ -49,7 +71,7 @@ mkdir -p processed-json-zip
 python3 $code/xml_parser_productlevel.py processed-xml/all_dailymed_human_rx processed-json-zip/all_dailymed_human_rx-jsons.zip
 ```
 
-In this case, any .xml file recursively found in the all_dailymed_human_rx folder will be converted to JSON and included in the output zip file.
+In this case, any .xml file **recursively** found in the all_dailymed_human_rx folder will be converted to JSON and included in the output zip file.
 
 ## Step 3 -- Upload all the JSON files in the Zip using API calls
 
