@@ -89,12 +89,12 @@ def download(url):
     print (output)
 
 def download_all_dailymed_human_rx():
-    for i in range(1, 6):
+    for i in range(1, 7):
         remote_file="dm_spl_release_human_rx_part" + str(i) + ".zip"
         download("https://dailymed-data.nlm.nih.gov/public-release-files/" + remote_file)
 
 def process_all_dailymed_human_rx():
-    for i in range(1, 6):
+    for i in range(1, 7):
         remote_file="dm_spl_release_human_rx_part" + str(i) + ".zip"
         stem = Path(remote_file).stem
         extractXmlsFromFile(remote_file)
@@ -105,12 +105,12 @@ def process_all_dailymed_human_rx():
         shutil.move('xml-files3',  output_base_path / stem)
 
 def download_all_dailymed_human_otc():
-    for i in range(1, 11):
+    for i in range(1, 12):
         remote_file="dm_spl_release_human_otc_part" + str(i) + ".zip"
         download("https://dailymed-data.nlm.nih.gov/public-release-files/" + remote_file)
 
 def process_all_dailymed_human_otc():
-    for i in range(1, 11):
+    for i in range(1, 12):
         remote_file="dm_spl_release_human_otc_part" + str(i) + ".zip"
         stem = Path(remote_file).stem
         extractXmlsFromFile(remote_file)

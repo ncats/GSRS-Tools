@@ -66,6 +66,10 @@ def gather_uniis(input_path: str):
     return all_uniis
 
 def main():
+    """
+    cd $workspace
+    python3 gather_uniis_from_extracted_xmls.py processed-xml gathered_uniis.csv
+    """
     if len(sys.argv) != 3:
         print(f"Usage: {sys.argv[0]} <input_folder> <output.csv>")
         sys.exit(1)
