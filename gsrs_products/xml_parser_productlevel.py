@@ -260,6 +260,7 @@ def parse_xml_file(file_path, data_dictionary, log_file_path):
                                             "productType": XML_values.get('Product_Type', '').upper().replace(substring_to_remove, ''),
                                             "applicationType": XML_values.get('Application_Type', ''),
                                             "applicationNumber": XML_values.get('Application_ID', ''),
+
                                             "jurisdictions": "United States (USA)",
                                             "productUrl": XML_values.get('URL', ''),
                                             "publicDomain": "YES",
@@ -288,7 +289,14 @@ def parse_xml_file(file_path, data_dictionary, log_file_path):
                                             "routeOfAdministration": XML_values.get('routeAdmin', '').upper()
                                         }
                                     ]
-                                }  
+
+
+	                         }
+                        # new code
+                        if GSRSProduct.productType == "HUMAN PRESCRIPTION DRUG LABEL":
+                          GSRSProduct.applicationNumber = GSRSProduct.applicationNumber.replace(GSRSProduct.applicationType, "")
+                        print(GSRSProduct.productType)
+ 
                         if (useAutoload):
                             response=requests.post(updateUrl, json=GSRSProduct ,headers=updateHeaders, verify=verifySsl)
                             print (json.dumps(GSRSProduct)) 
