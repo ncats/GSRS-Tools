@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     if len(sys.argv) != 2:
         print(f"Usage: {sys.argv[0]} <input_json_zipfile_path>")
-        print(f"\nExample: python3 \$code/uploader.py processed-json-zip/all_dailymed_human_rx-jsons.zip")
+        print(f'Example: python3 $code/uploader.py processed-json-zip/all_dailymed_human_rx-jsons.zip')
         sys.exit(1)
 
     input_json_zipfile_path = sys.argv[1]
