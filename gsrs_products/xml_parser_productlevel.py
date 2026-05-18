@@ -1,5 +1,3 @@
-
-
 import os
 import sys
 import json
@@ -20,7 +18,6 @@ export AUTH_PASSWORD=XXXXXX
 export AUTH_KEY=XXXXXX
 export TARGET_URL="http://localhost:8081/ginas/app/api/v1/products"
 """
-
 
 
 # Load your CSV data if needed (Not currently used at FDA because we do UNII lookup automatically)
@@ -115,6 +112,8 @@ def parse_xml_file(file_path, log_file_path):
         print('unable to open')
         safe_log(log_file_path, file_path, "XML_OPEN_ERROR", str(e))
         return None
+
+    print("Here6")
 
     # Initialize dictionary to store extracted XML data
     try:
@@ -403,15 +402,6 @@ def parse_xml_file(file_path, log_file_path):
                         safe_log(log_file_path, file_path, "PACKAGING_PARSE_ERROR", str(e))
 
                 
-                # Drug shortage lookup
-                
-                shortage_info = ndc_shortage_lookup.get(key, {})
-                if not shortage_info and isinstance(key, str) and '-' in key:
-                    shortage_info = ndc_shortage_lookup.get(key.rsplit('-', 1)[0], {})
-
-                shortage_status = shortage_info.get('DrugshortageStatus', '')
-                shortage_reason = shortage_info.get('DrugShortageReason', '')
-
                 
                 # Building GSRSProduct
                 
@@ -485,6 +475,10 @@ def parse_xml_file(file_path, log_file_path):
                                 "isListed": "YES"
                             }
                         ],
+
+
+
+
                         "productManufactureItems": [
                             {
                                 "productManufacturers": [
@@ -510,64 +504,11 @@ def parse_xml_file(file_path, log_file_path):
                         ]
                     }
 
-                    # Only append FDA Drug Shortage provenance when shortage data exists.
-                    if shortage_info:
-                        GSRSProduct["productProvenances"].append(
-                            {
-                                "productNames": [
-                                    {
-                                        "productName": XML_values.get('ProductName', ''),
-                                        "displayName": True,
-                                        "language": "en",
-                                        "productNameType": "PRODUCT NAME"
-                                    },
-                                    {
-                                        "productName": XML_values.get('Generic Name', ''),
-                                        "displayName": False,
-                                        "language": "en",
-                                        "productNameType": "GENERIC NAME"
-                                    }
-                                ],
-                                "productCodes": [
-                                    {
-                                        "productCode": key,
-                                        "productCodeType": "NDC CODE"
-                                    }
-                                ],
-                                "productCompanies": [
-                                    {
-                                        "productCompanyCodes": [
-                                            {
-                                                "companyCode": XML_values.get('RepresentativeOrgDUNS', ''),
-                                                "companyCodeType": "DUNS NUMBER"
-                                            }
-                                        ],
-                                        "provenanceDocumentId": XML_values.get('Set_Id', ''),
-                                        "companyName": XML_values.get('RepresentativeOrg', '')
-                                    }
-                                ],
-                                "productDocumentations": [
-                                    {
-                                        "documentId": XML_values.get('Set_Id', ''),
-                                        "setIdVersion": XML_values.get('version_number', ''),
-                                        "jurisdictions": "United States (USA)",
-                                        "documentType": "SET ID"
-                                    }
-                                ],
-                                "provenance": "FDA Drug Shortage List",
-                                "productStatus": shortage_status.upper(),
-                                "productType": shortage_reason,
-                                "applicationType": XML_values.get('Application_Type', ''),
-                                "applicationNumber": XML_values.get('Application_ID', ''),
-                                "jurisdictions": "United States (USA)",
-                                "productUrl": 'http://dps.fda.gov/drugshortages',
-                                "publicDomain": "YES",
-                                "isListed": "YES"
-                            }
-                        )
-
-                    if GSRSProduct.productType == "HUMAN PRESCRIPTION DRUG LABEL":
-                        GSRSProduct.applicationNumber = GSRSProduct.applicationNumber.replace(GSRSProduct.applicationType, "")
+                    # Assuming we only have on provenance.
+                    # Clean up applicationNumber of non-useful values
+                    tempRef=GSRSProduct['productProvenances'][0]
+                    if tempRef['productType'] == "HUMAN PRESCRIPTION DRUG LABEL":
+                        tempRef['applicationNumber'] = tempRef['applicationNumber'].replace(tempRef['applicationType'], "")
 
 
                 except Exception as e:
@@ -624,6 +565,11 @@ def process_xml_files(folder_path, log_file_path):
         return process_xml_files_listdir(folder_path, log_file_path)	    
 
 # Save parsed data as JSON files in a zip archive
+def testing():
+    print("Testing")
+
+
+
 
 def save_data_as_zip(data_list, output_zip):
     with zipfile.ZipFile(output_zip, 'w') as zipf:
@@ -713,9 +659,12 @@ if __name__ == "__main__":
         value_column = 'UUID'
         data_dictionary = csv_to_transformed_dict(csv_file_path, key_column, value_column)
     
+    testing()
 
     # Process XML files and create zip archive with JSONs
     parsed_data = process_xml_files(folder_path, log_file_path)
+    print("HERE")
+    print(parsed_data)
     save_data_as_zip(parsed_data, output_zip)
 
     # Example of loading data from the created zip file
