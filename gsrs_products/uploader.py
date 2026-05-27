@@ -136,7 +136,6 @@ if __name__ == "__main__":
     # firstId, LastId; one is added to last id to make it work right ... make this cleaner
     # delete_range(urlPROD, 21, 170, headersPROD)
     # delete_one(urlPROD, 14917, headersPROD)
-print ("here")
     upload_files(data_zip_path, batch_size, _url, _headers)
 
 
