@@ -112,9 +112,7 @@ def parse_xml_file(file_path, log_file_path):
         print('unable to open')
         safe_log(log_file_path, file_path, "XML_OPEN_ERROR", str(e))
         return None
-
-    print("Here6")
-
+    
     # Initialize dictionary to store extracted XML data
     try:
         XML_values = {}
@@ -501,7 +499,7 @@ def parse_xml_file(file_path, log_file_path):
                                 "charColor": XML_values.get('SPLCOLOR', '').upper(),
                                 "routeOfAdministration": XML_values.get('routeAdmin', '').upper()
                             }
-                        ]
+                       ]
                     }
 
                     # Assuming we only have on provenance.
@@ -663,8 +661,6 @@ if __name__ == "__main__":
 
     # Process XML files and create zip archive with JSONs
     parsed_data = process_xml_files(folder_path, log_file_path)
-    print("HERE")
-    print(parsed_data)
     save_data_as_zip(parsed_data, output_zip)
 
     # Example of loading data from the created zip file
