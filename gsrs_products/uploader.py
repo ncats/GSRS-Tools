@@ -58,7 +58,7 @@ def upload_files_in_batches(data_list, batch_size, url, headers):
                     if data is not None:
                         filename = f"data_{i + index + 1}.json"
                         pool.apply_async(upload_data, args=(filename, data, url, headers))
-                        # upload_data(filename, data, url, headers)
+                        upload_data(filename, data, url, headers)
                     else:
                         logger.warning(f"Skipping upload for data index {i + index + 1} because it is None")
                 except Exception as e:
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     # Handle input folder and output zipfile path
 
-    print(len(sys.argv))
+    # print(len(sys.argv))
 
     if len(sys.argv) != 2:
         print(f"Usage: {sys.argv[0]} <input_json_zipfile_path>")
