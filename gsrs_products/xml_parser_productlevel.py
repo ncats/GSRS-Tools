@@ -130,7 +130,7 @@ def parse_xml_file(file_path, log_file_path):
             Author['RepresentativeOrg'] = ''
             safe_log(log_file_path, file_path, "AUTHOR_PARSE_ERROR", str(e))
 
-        substring_to_remove = "LABEL"
+        substring_to_remove = " LABEL"
 
         for component in root.findall('.//hl7:component/hl7:section/hl7:subject', HL7):
 
@@ -227,6 +227,7 @@ def parse_xml_file(file_path, log_file_path):
                         try:
                             Administcode = substanceAdministration.find('.//hl7:routeCode', HL7) if substanceAdministration is not None else None
                             XML_values['routeAdmin'] = Administcode.get('displayName', '') if Administcode is not None else ''
+                            print ("routeAdmin1: " +  XML_values['routeAdmin'])
                         except Exception as e:
                             safe_log(log_file_path, file_path, "ROUTE_PARSE_ERROR", str(e))
 
@@ -402,7 +403,7 @@ def parse_xml_file(file_path, log_file_path):
                 
                 
                 # Building GSRSProduct
-                
+                print ("routeAdmin2: " +  XML_values.get('routeAdmin', '').upper());
                 try:
                     GSRSProduct = {
                         "pharmacedicalDosageForm": XML_values.get('formCode_Name', '').upper(),
@@ -502,17 +503,18 @@ def parse_xml_file(file_path, log_file_path):
                        ]
                     }
 
-                    # Assuming we only have on provenance.
-                    # Clean up applicationNumber of non-useful values
-                    tempRef=GSRSProduct['productProvenances'][0]
-                    if tempRef['productType'] == "HUMAN PRESCRIPTION DRUG LABEL":
-                        tempRef['applicationNumber'] = tempRef['applicationNumber'].replace(tempRef['applicationType'], "")
 
-
+                    if GSRSProduct['productProvenances'][0]['productType'] == "HUMAN PRESCRIPTION DRUG":
+                        GSRSProduct['productProvenances'][0]['applicationNumber'] = GSRSProduct['productProvenances'][0]['applicationNumber'].replace( GSRSProduct['productProvenances'][0]['applicationType'], "")
+                        print ("1 " + GSRSProduct['productProvenances'][0]['productType'])
+                        print ("2 " + GSRSProduct['productProvenances'][0]['applicationType'])
+                        print ("3 " + GSRSProduct['productProvenances'][0]['applicationNumber'])
+                    print("routeAdmin3: " + XML_values.get('routeAdmin', '').upper())
                 except Exception as e:
                     print(f"[ERROR] Failed to create GSRSProduct. Error: {str(e)}")
                     safe_log(log_file_path, file_path, "GSRS_BUILD_ERROR", str(e))
                     GSRSProduct = {}
+
 
         log_message = f"[SUCCESS] parse XML file: {file_path}"
         log_to_file(log_file_path, log_message)
