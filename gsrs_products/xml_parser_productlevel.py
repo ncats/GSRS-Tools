@@ -132,10 +132,13 @@ def parse_xml_file(file_path, log_file_path):
 
         substring_to_remove = " LABEL"
 
+        components_i=0
         for component in root.findall('.//hl7:component/hl7:section/hl7:subject', HL7):
-
+            components_i=components_i+1
+            products_i=0
             for manufacturedProduct in component.findall('.//hl7:manufacturedProduct', HL7):
-
+                products_i=products_i+1
+                print ("loop ... component: " + str(components_i) + " ... product: " + str(products_i))
                 XML_values = {
                     'routeAdmin': '',
                     'Ingredients': [],
@@ -406,7 +409,7 @@ def parse_xml_file(file_path, log_file_path):
                 print ("routeAdmin2: " +  XML_values.get('routeAdmin', '').upper());
                 try:
                     GSRSProduct = {
-                        "pharmacedicalDosageForm": XML_values.get('formCode_Name', '').upper(),
+                        "productContainer": XML_values.get('formCode_Name', '').upper(),
                         "routeAdmin": XML_values.get('routeAdmin', '').upper(),
                         "countryCode": "United States (USA)",
                         "language": "en",
@@ -498,7 +501,7 @@ def parse_xml_file(file_path, log_file_path):
                                 "charShape": XML_values.get('SPLSHAPE', '').upper(),
                                 "charSize": XML_values.get('SPLSIZE', ''),
                                 "charColor": XML_values.get('SPLCOLOR', '').upper(),
-                                "routeOfAdministration": XML_values.get('routeAdmin', '').upper()
+                                "routeOfAdministration": str(XML_values.get('routeAdmin', '').upper())
                             }
                        ]
                     }
@@ -509,7 +512,7 @@ def parse_xml_file(file_path, log_file_path):
                         print ("1 " + GSRSProduct['productProvenances'][0]['productType'])
                         print ("2 " + GSRSProduct['productProvenances'][0]['applicationType'])
                         print ("3 " + GSRSProduct['productProvenances'][0]['applicationNumber'])
-                    print("routeAdmin3: " + XML_values.get('routeAdmin', '').upper())
+                    print("routeAdmin3: " + GSRSProduct['routeAdmin'])
                 except Exception as e:
                     print(f"[ERROR] Failed to create GSRSProduct. Error: {str(e)}")
                     safe_log(log_file_path, file_path, "GSRS_BUILD_ERROR", str(e))
@@ -519,12 +522,15 @@ def parse_xml_file(file_path, log_file_path):
         log_message = f"[SUCCESS] parse XML file: {file_path}"
         log_to_file(log_file_path, log_message)
 
+
     except Exception as e:
         print('key', file_path)
         log_message = f"[ERROR] Failed to parse XML file: {file_path}. Error: {e}"
         log_to_file(log_file_path, log_message)
         GSRSProduct = {}
 
+    print("routeAdmin4: " + GSRSProduct['routeAdmin'])
+    print("routeOfAdministration4: " + GSRSProduct['routeAdmin'])
     return GSRSProduct
 
 # Process multiple XML files
