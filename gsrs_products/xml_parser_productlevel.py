@@ -100,6 +100,7 @@ def csv_to_transformed_dict(csv_file, key_column, value_column):
 # Main XML parser
 
 def parse_xml_file(file_path, log_file_path):
+    GSRSProducts= []
     try:
         tree = ET.parse(file_path)
         root = tree.getroot()
@@ -477,10 +478,6 @@ def parse_xml_file(file_path, log_file_path):
                                 "isListed": "YES"
                             }
                         ],
-
-
-
-
                         "productManufactureItems": [
                             {
                                 "productManufacturers": [
@@ -503,7 +500,7 @@ def parse_xml_file(file_path, log_file_path):
                                 "charColor": XML_values.get('SPLCOLOR', '').upper(),
                                 "routeOfAdministration": str(XML_values.get('routeAdmin', '').upper())
                             }
-                       ]
+                        ]
                     }
 
 
@@ -513,6 +510,8 @@ def parse_xml_file(file_path, log_file_path):
                         print ("2 " + GSRSProduct['productProvenances'][0]['applicationType'])
                         print ("3 " + GSRSProduct['productProvenances'][0]['applicationNumber'])
                     print("routeAdmin3: " + GSRSProduct['routeAdmin'])
+
+                    GSRSProducts.append(GSRSProduct)
                 except Exception as e:
                     print(f"[ERROR] Failed to create GSRSProduct. Error: {str(e)}")
                     safe_log(log_file_path, file_path, "GSRS_BUILD_ERROR", str(e))
@@ -529,9 +528,7 @@ def parse_xml_file(file_path, log_file_path):
         log_to_file(log_file_path, log_message)
         GSRSProduct = {}
 
-    print("routeAdmin4: " + GSRSProduct['routeAdmin'])
-    print("routeOfAdministration4: " + GSRSProduct['routeAdmin'])
-    return GSRSProduct
+    return GSRSProducts
 
 # Process multiple XML files
 
@@ -542,7 +539,7 @@ def process_xml_files_list_dir(folder_path, log_file_path):
 
     for filename in xml_files:
         file_path = os.path.join(folder_path, filename)
-        parsed_data.append(parse_xml_file(file_path, log_file_path))
+        parsed_data.extend(parse_xml_file(file_path, log_file_path))
     return parsed_data
 
 def find_all_xml_files_os_walk(folder_path):
@@ -559,7 +556,7 @@ def process_xml_files_walk(folder_path, log_file_path):
     xml_files = find_all_xml_files_os_walk(folder_path)
     parsed_data = []
     for file_path in xml_files:
-        parsed_data.append(parse_xml_file(file_path, log_file_path))
+        parsed_data.extend(parse_xml_file(file_path, log_file_path))
     return parsed_data
 
 
