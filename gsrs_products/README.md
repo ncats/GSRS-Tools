@@ -112,7 +112,7 @@ all_dailymed_remainder
 '
 
 for folder in  $folders; do
-  zipinfo -t processed-json-zip/$folder.zip
+  zipinfo -t processed-json-zip/$folder-jsons.zip
 done
 ```
 
@@ -131,8 +131,12 @@ export TARGET_URL="http://localhost:8081/ginas/app/api/v1/products"
 
 ```
 
-Next, run:
+Next, since these are pretty time consuming, you're probably going to want to use nohup and run these one by one:
 
 ```
-python3 $code/uploader.py processed-json-zip/all_dailymed_human_rx-jsons.zip
+nohup python3 $code/uploader.py processed-json-zip/all_dailymed_human_rx-jsons.zip &
+nohup python3 $code/uploader.py processed-json-zip/all_dailymed_human_otc-jsons.zip &
+nohup python3 $code/uploader.py processed-json-zip/all_dailymed_animal-jsons.zip &
+nohup python3 $code/uploader.py processed-json-zip/all_dailymed_remainder-jsons.zip &
+
 ```
