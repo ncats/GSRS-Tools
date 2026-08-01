@@ -34,10 +34,14 @@ Notice that data in each grouping is often broken up into numerous Zip files. Ma
           download("https://dailymed-data.nlm.nih.gov/public-release-files/" + remote_file)
 ```
 
-Here is an example of how to run for `_human_rx`:
+Run the scripts like this 
 
 ```
 python3 $code/prepare_dailymed_file_for_script.py all_dailymed_human_rx
+python3 $code/prepare_dailymed_file_for_script.py all_dailymed_human_otc
+python3 $code/prepare_dailymed_file_for_script.py all_dailymed_homeopathic
+python3 $code/prepare_dailymed_file_for_script.py all_dailymed_animal
+python3 $code/prepare_dailymed_file_for_script.py all_dailymed_remainder
 ```
 
 This will download zip files from DailyMed for the group, and will extract them into a folder structure that looks like this:
@@ -84,6 +88,15 @@ for folder in  $folders; do
 mkdir -p processed-json-zip
 
 python3 $code/xml_parser_productlevel.py processed-xml/all_dailymed_human_rx processed-json-zip/all_dailymed_human_rx-jsons.zip
+
+python3 $code/xml_parser_productlevel.py processed-xml/all_dailymed_human_otc processed-json-zip/all_dailymed_human_otc-jsons.zip
+
+# At ncats/fda we skip all_dailymed_homeopathic 
+
+python3 $code/xml_parser_productlevel.py processed-xml/all_dailymed_animal processed-json-zip/all_dailymed_animal-jsons.zip
+
+python3 $code/xml_parser_productlevel.py processed-xml/all_dailymed_remainder processed-json-zip/all_dailymed_remainder-jsons.zip
+
 ```
 
 In this case, any .xml file **recursively** found in the all_dailymed_human_rx folder will be converted to JSON and included in the output zip file.
