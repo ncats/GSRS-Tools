@@ -73,8 +73,8 @@ all_dailymed_animal
 all_dailymed_remainder
 '
 for folder in  $folders; do
-   echo -n "$folder " 
-    python3 $code/gather_product_counts.py   processed-xml/$folder
+  echo -n "$folder "
+  python3 $code/gather_product_counts.py   processed-xml/$folder
  done
 ```
 
