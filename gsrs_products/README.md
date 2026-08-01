@@ -101,6 +101,21 @@ python3 $code/xml_parser_productlevel.py processed-xml/all_dailymed_remainder pr
 
 In this case, any .xml file **recursively** found in the all_dailymed_human_rx folder will be converted to JSON and included in the output zip file.
 
+You can get the counts in each json-zip file like this:
+
+```
+folders='
+all_dailymed_human_rx
+all_dailymed_human_otc
+all_dailymed_animal
+all_dailymed_remainder
+'
+
+for folder in  $folders; do
+  zipinfo -t processed-json-zip/$folder.zip
+done
+```
+
 ## Step 3 -- Upload all the JSON files in the Zip using API calls
 
 First, set environment variables for uploader as needed.
