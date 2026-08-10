@@ -66,7 +66,7 @@ The script `prepare_dailymed_file_for_script.py` currently facilitates downloadi
 - all_dailymed_animal
 - all_dailymed_remainder
 
-Each XML file can contain 1 or more products, so it's helpful to get a count for products inside each folder.  The script gather_product_counts.py will do that. Bear in mind that this script is recursive.  It will count the products in all XML files in the folder or in  zip files in a folder. Examine the script so you know what it is counting  
+Each XML file can contain 1 or more products, so it's helpful to get a count for products inside each folder.  The script gather_product_counts_from_xmls.py will do that. Bear in mind that this script is recursive.  It will count the products in all XML files in the folder or in  zip files in a folder. Examine the script so you know what it is counting  
 
 ```
 folders='
@@ -78,7 +78,7 @@ all_dailymed_remainder
 '
 for folder in  $folders; do
   echo -n "$folder "
-  python3 $code/gather_product_counts.py   processed-xml/$folder
+  python3 $code/gather_product_counts_from_xmls.py   processed-xml/$folder
  done
 ```
 
