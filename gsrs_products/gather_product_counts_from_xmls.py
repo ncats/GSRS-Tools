@@ -13,30 +13,28 @@ def count_xml_files(input_path: str)  -> Set[str]:
             c = c + 1
     print (c)
 
-def uniis_from_xml_bytes(data: bytes):
-    #	-> set[str]:
+def count_products_from_xml_bytes(data: bytes):
     try:
         root = ET.fromstring(data)
     except ET.ParseError:
         return set()
-    uniis = set()
-    for p in (
-        ".//hl7:ingredient//hl7:ingredientSubstance//hl7:code",
-        ".//hl7:ingredient//hl7:activeMoiety//hl7:code",
-        ".//hl7:ingredient//hl7:ingredientSubstance//hl7:asEquivalentSubstance//hl7:code",
-    ):
-        for el in root.findall(p, HL7):
-            c = el.get("code")
-            if c: uniis.add(c)
-    return uniis
+    count=0 
+    components_i=0
+    for component in root.findall('.//hl7:component/hl7:section/hl7:subject', HL7):
+        components_i=components_i+1
+        products_i=0
+        for manufacturedProduct in component.findall('./hl7:manufacturedProduct', HL7):
+            products_i=products_i+1
+            # print ("loop ... component: " + str(components_i) + " ... product: " + str(products_i))
+            count = count+1;
+    # print (f"count: {count}")
+    return count 
 
-def gather_uniis(input_path: str):
-    # -> set[str]:
-    all_uniis = set()
-
+def gather_product_counts(input_path: str):
+    counts=0
     for root, _, files in os.walk(input_path):
         for fname in files:
-            print (fname)
+            # print (fname)
             fpath = os.path.join(root, fname)
             fnl = fname.lower()
 
@@ -44,7 +42,9 @@ def gather_uniis(input_path: str):
             if fnl.endswith(".xml"):
                 try:
                     with open(fpath, "rb") as f:
-                        all_uniis |= uniis_from_xml_bytes(f.read())
+                        per_file_counts = count_products_from_xml_bytes(f.read())
+                        # print (f"per_file_counts: {per_file_counts}")
+                        counts = per_file_counts + counts
                 except Exception:
                     pass
                 continue
@@ -57,33 +57,26 @@ def gather_uniis(input_path: str):
                             if name.lower().endswith(".xml"):
                                 try:
                                     with zf.open(name) as zf_xml:
-                                        all_uniis |= uniis_from_xml_bytes(zf_xml.read())
+                                        per_file_counts = count_products_from_xml_bytes(zf_xml.read())
+                                        counts = per_file_counts + counts
                                 except Exception:
                                     pass
                 except Exception:
                     pass
-
-    return all_uniis
+    return counts
 
 def main():
     """
     cd $workspace
-    python3 $code/gather_uniis_from_extracted_xmls.py processed-xml gathered_uniis.csv
+    python3 $code/gather_product_counts_fromm_xmls.py processed-xml 
     """
-    if len(sys.argv) != 3:
-        print(f"Usage: {sys.argv[0]} <input_folder> <output.csv>")
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} <input_folder>")
         sys.exit(1)
 
-    input_folder, out_csv = sys.argv[1], sys.argv[2]
-    uniis = sorted(gather_uniis(input_folder))
-
-    with open(out_csv, "w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
-        w.writerow(["UNII"])
-        for u in uniis:
-            w.writerow([u])
-
-    print(f"Wrote {len(uniis)} unique UNIIs to {out_csv}")
+    input_folder = sys.argv[1] 
+    total = gather_product_counts(input_folder)
+    print(f"Total count: {total}")
 
 if __name__ == "__main__":
     main()

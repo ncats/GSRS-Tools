@@ -91,7 +91,7 @@ def download(url):
 def download_all_dailymed_human_rx():
     for i in range(1, 7):
         remote_file="dm_spl_release_human_rx_part" + str(i) + ".zip"
-#        download("https://dailymed-data.nlm.nih.gov/public-release-files/" + remote_file)
+        download("https://dailymed-data.nlm.nih.gov/public-release-files/" + remote_file)
 
 def process_all_dailymed_human_rx():
     for i in range(1, 7):

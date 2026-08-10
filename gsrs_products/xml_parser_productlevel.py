@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 import zipfile
 import requests
-
+from pprint import pprint
 """
 Set these values to pass credential and URL values  
 
@@ -137,9 +137,9 @@ def parse_xml_file(file_path, log_file_path):
         for component in root.findall('.//hl7:component/hl7:section/hl7:subject', HL7):
             components_i=components_i+1
             products_i=0
-            for manufacturedProduct in component.findall('.//hl7:manufacturedProduct', HL7):
+            for manufacturedProduct in component.findall('./hl7:manufacturedProduct', HL7):
                 products_i=products_i+1
-                print ("loop ... component: " + str(components_i) + " ... product: " + str(products_i))
+                # print ("loop ... component: " + str(components_i) + " ... product: " + str(products_i))
                 XML_values = {
                     'routeAdmin': '',
                     'Ingredients': [],
@@ -231,7 +231,7 @@ def parse_xml_file(file_path, log_file_path):
                         try:
                             Administcode = substanceAdministration.find('.//hl7:routeCode', HL7) if substanceAdministration is not None else None
                             XML_values['routeAdmin'] = Administcode.get('displayName', '') if Administcode is not None else ''
-                            print ("routeAdmin1: " +  XML_values['routeAdmin'])
+                            # print ("routeAdmin1: " +  XML_values['routeAdmin'])
                         except Exception as e:
                             safe_log(log_file_path, file_path, "ROUTE_PARSE_ERROR", str(e))
 
@@ -407,7 +407,7 @@ def parse_xml_file(file_path, log_file_path):
                 
                 
                 # Building GSRSProduct
-                print ("routeAdmin2: " +  XML_values.get('routeAdmin', '').upper());
+                # print ("routeAdmin2: " +  XML_values.get('routeAdmin', '').upper());
                 try:
                     GSRSProduct = {
                         "productContainer": XML_values.get('formCode_Name', '').upper(),
@@ -502,16 +502,17 @@ def parse_xml_file(file_path, log_file_path):
                             }
                         ]
                     }
-
-
+                    # pprint (GSRSProduct)
+                    # print ("\n");
                     if GSRSProduct['productProvenances'][0]['productType'] == "HUMAN PRESCRIPTION DRUG":
                         GSRSProduct['productProvenances'][0]['applicationNumber'] = GSRSProduct['productProvenances'][0]['applicationNumber'].replace( GSRSProduct['productProvenances'][0]['applicationType'], "")
-                        print ("1 " + GSRSProduct['productProvenances'][0]['productType'])
-                        print ("2 " + GSRSProduct['productProvenances'][0]['applicationType'])
-                        print ("3 " + GSRSProduct['productProvenances'][0]['applicationNumber'])
-                    print("routeAdmin3: " + GSRSProduct['routeAdmin'])
+                        # print ("1 " + GSRSProduct['productProvenances'][0]['productType'])
+                        # print ("2 " + GSRSProduct['productProvenances'][0]['applicationType'])
+                        # print ("3 " + GSRSProduct['productProvenances'][0]['applicationNumber'])
+                    # print("routeAdmin3: " + GSRSProduct['routeAdmin'])
 
                     GSRSProducts.append(GSRSProduct)
+                    GSRSProduct = {}
                 except Exception as e:
                     print(f"[ERROR] Failed to create GSRSProduct. Error: {str(e)}")
                     safe_log(log_file_path, file_path, "GSRS_BUILD_ERROR", str(e))
@@ -523,7 +524,7 @@ def parse_xml_file(file_path, log_file_path):
 
 
     except Exception as e:
-        print('key', file_path)
+        # print('key', file_path)
         log_message = f"[ERROR] Failed to parse XML file: {file_path}. Error: {e}"
         log_to_file(log_file_path, log_message)
         GSRSProduct = {}
@@ -591,7 +592,7 @@ def load_data_from_zip(zip_file_path):
                 with zipf.open(file_name) as json_file:
                     data = json.load(json_file)
                     data_list.append(data)
-    #print(f"[INFO] Loaded {len(data_list)} JSON files from the zip archive.")
+    # print(f"[INFO] Loaded {len(data_list)} JSON files from the zip archive.")
     return data_list
 
 # Entry point for XML parsing
