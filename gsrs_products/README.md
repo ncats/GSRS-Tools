@@ -34,10 +34,14 @@ Notice that data in each grouping is often broken up into numerous Zip files. Ma
           download("https://dailymed-data.nlm.nih.gov/public-release-files/" + remote_file)
 ```
 
-Here is an example of how to run for `_human_rx`:
+Run the scripts like this 
 
 ```
 python3 $code/prepare_dailymed_file_for_script.py all_dailymed_human_rx
+python3 $code/prepare_dailymed_file_for_script.py all_dailymed_human_otc
+python3 $code/prepare_dailymed_file_for_script.py all_dailymed_homeopathic
+python3 $code/prepare_dailymed_file_for_script.py all_dailymed_animal
+python3 $code/prepare_dailymed_file_for_script.py all_dailymed_remainder
 ```
 
 This will download zip files from DailyMed for the group, and will extract them into a folder structure that looks like this:
@@ -62,6 +66,21 @@ The script `prepare_dailymed_file_for_script.py` currently facilitates downloadi
 - all_dailymed_animal
 - all_dailymed_remainder
 
+Each XML file can contain 1 or more products, so it's helpful to get a count for products inside each folder.  The script gather_product_counts_from_xmls.py will do that. Bear in mind that this script is recursive.  It will count the products in all XML files in the folder or in  zip files in a folder. Examine the script so you know what it is counting  
+
+```
+folders='
+all_dailymed_human_rx
+all_dailymed_human_otc
+all_dailymed_homeopathic 
+all_dailymed_animal
+all_dailymed_remainder
+'
+for folder in  $folders; do
+  echo -n "$folder "
+  python3 $code/gather_product_counts_from_xmls.py   processed-xml/$folder
+ done
+```
 
 ### Step 2 -- Convert DailyMed XMLs to JSON and place them in a Zip file
 
@@ -69,9 +88,33 @@ The script `prepare_dailymed_file_for_script.py` currently facilitates downloadi
 mkdir -p processed-json-zip
 
 python3 $code/xml_parser_productlevel.py processed-xml/all_dailymed_human_rx processed-json-zip/all_dailymed_human_rx-jsons.zip
+
+python3 $code/xml_parser_productlevel.py processed-xml/all_dailymed_human_otc processed-json-zip/all_dailymed_human_otc-jsons.zip
+
+# At ncats/fda we skip all_dailymed_homeopathic 
+
+python3 $code/xml_parser_productlevel.py processed-xml/all_dailymed_animal processed-json-zip/all_dailymed_animal-jsons.zip
+
+python3 $code/xml_parser_productlevel.py processed-xml/all_dailymed_remainder processed-json-zip/all_dailymed_remainder-jsons.zip
+
 ```
 
 In this case, any .xml file **recursively** found in the all_dailymed_human_rx folder will be converted to JSON and included in the output zip file.
+
+You can get the counts in each json-zip file like this:
+
+```
+folders='
+all_dailymed_human_rx
+all_dailymed_human_otc
+all_dailymed_animal
+all_dailymed_remainder
+'
+
+for folder in  $folders; do
+  zipinfo -t processed-json-zip/$folder-jsons.zip
+done
+```
 
 ## Step 3 -- Upload all the JSON files in the Zip using API calls
 
@@ -88,8 +131,12 @@ export TARGET_URL="http://localhost:8081/ginas/app/api/v1/products"
 
 ```
 
-Next, run:
+Next, since these are pretty time consuming, you're probably going to want to use nohup and run these one by one:
 
 ```
-python3 $code/uploader.py processed-json-zip/all_dailymed_human_rx-jsons.zip
+nohup python3 $code/uploader.py processed-json-zip/all_dailymed_human_rx-jsons.zip &
+nohup python3 $code/uploader.py processed-json-zip/all_dailymed_human_otc-jsons.zip &
+nohup python3 $code/uploader.py processed-json-zip/all_dailymed_animal-jsons.zip &
+nohup python3 $code/uploader.py processed-json-zip/all_dailymed_remainder-jsons.zip &
+
 ```

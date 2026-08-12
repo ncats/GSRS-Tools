@@ -1,0 +1,214 @@
+{
+  "productContainer": "BOTTLE",
+  "routeAdmin": "ORAL",
+  "countryCode": "United States (USA)",
+  "language": "en",
+  "manufacturerName": "DIRECTRX",
+  "manufacturerCode": "079254320",
+  "manufacturerCodeType": "DUNS NUMBER",
+  "productProvenances": [
+    {
+      "productNames": [
+        {
+          "productName": "HYDROCODONE /APAP",
+          "displayName": true,
+          "language": "en",
+          "productNameType": "PRODUCT NAME"
+        },
+        {
+          "productName": "HYDROCODONE /APAP",
+          "displayName": false,
+          "language": "en",
+          "productNameType": "GENERIC NAME"
+        }
+      ],
+      "productCodes": [
+        {
+          "productCode": "61919-618",
+          "productCodeType": "NDC CODE"
+        }
+      ],
+      "productCompanies": [
+        {
+          "productCompanyCodes": [
+            {
+              "companyCode": "079254320",
+              "companyCodeType": "DUNS NUMBER"
+            }
+          ],
+          "provenanceDocumentId": "86325900-d617-f02b-e053-2991aa0a8e99",
+          "companyName": "DIRECTRX"
+        }
+      ],
+      "productDocumentations": [
+        {
+          "documentId": "86325900-d617-f02b-e053-2991aa0a8e99",
+          "setIdVersion": "1",
+          "jurisdictions": "United States (USA)",
+          "documentType": "SET ID"
+        }
+      ],
+      "productIndications": [
+        {
+          "indicationsText": "All indication go here"
+        }
+      ],
+      "provenance": "XML_SPL",
+      "productStatus": "ACTIVE",
+      "marketingStartDate": "04/10/2019",
+      "marketingEndDate": "",
+      "labelEffectiveDate": "04/10/2019",
+      "productType": "HUMAN PRESCRIPTION DRUG",
+      "applicationType": "ANDA",
+      "applicationNumber": "201013",
+      "jurisdictions": "United States (USA)",
+      "productUrl": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=86325900-d617-f02b-e053-2991aa0a8e99",
+      "publicDomain": "YES",
+      "isListed": "YES"
+    }
+  ],
+  "productManufactureItems": [
+    {
+      "productManufacturers": [
+        {
+          "manufacturerRole": "REPRESENTATIVE ORGANIZATION",
+          "manufacturerName": "DIRECTRX",
+          "manufacturerCodeType": "DUNS NUMBER",
+          "manufacturerCode": "079254320"
+        }
+      ],
+      "productLots": [
+        {
+          "productIngredients": [
+            {
+              "applicantIngredName": "MAGNESIUM STEARATE",
+              "substanceKeyType": "APPROVAL_ID",
+              "ingredientType": "INACTIVE INGREDIENT",
+              "substanceKey": "70097M6I30",
+              "basisOfStrengthSubstanceKey": "70097M6I30",
+              "basisOfStrengthSubstanceKeyType": "APPROVAL_Id",
+              "originalNumeratorNumber": "",
+              "originalNumeratorUnit": "",
+              "originalDenominatorNumber": "",
+              "originalDenominatorUnit": ""
+            },
+            {
+              "applicantIngredName": "CROSCARMELLOSE SODIUM",
+              "substanceKeyType": "APPROVAL_ID",
+              "ingredientType": "INACTIVE INGREDIENT",
+              "substanceKey": "M28OL1HH48",
+              "basisOfStrengthSubstanceKey": "M28OL1HH48",
+              "basisOfStrengthSubstanceKeyType": "APPROVAL_Id",
+              "originalNumeratorNumber": "",
+              "originalNumeratorUnit": "",
+              "originalDenominatorNumber": "",
+              "originalDenominatorUnit": ""
+            },
+            {
+              "applicantIngredName": "HYDROCODONE BITARTRATE",
+              "substanceKeyType": "APPROVAL_ID",
+              "ingredientType": "ACTIVE INGREDIENT",
+              "substanceKey": "NO70W886KK",
+              "basisOfStrengthSubstanceKey": "NO70W886KK",
+              "basisOfStrengthSubstanceKeyType": "APPROVAL_Id",
+              "originalNumeratorNumber": "5",
+              "originalNumeratorUnit": "MG",
+              "originalDenominatorNumber": "1",
+              "originalDenominatorUnit": "1"
+            },
+            {
+              "applicantIngredName": "ACETAMINOPHEN",
+              "substanceKeyType": "APPROVAL_ID",
+              "ingredientType": "ACTIVE INGREDIENT",
+              "substanceKey": "362O9ITL9D",
+              "basisOfStrengthSubstanceKey": "362O9ITL9D",
+              "basisOfStrengthSubstanceKeyType": "APPROVAL_Id",
+              "originalNumeratorNumber": "325",
+              "originalNumeratorUnit": "MG",
+              "originalDenominatorNumber": "1",
+              "originalDenominatorUnit": "1"
+            },
+            {
+              "applicantIngredName": "CROSPOVIDONE (15 MPA.S AT 5%)",
+              "substanceKeyType": "APPROVAL_ID",
+              "ingredientType": "INACTIVE INGREDIENT",
+              "substanceKey": "68401960MK",
+              "basisOfStrengthSubstanceKey": "68401960MK",
+              "basisOfStrengthSubstanceKeyType": "APPROVAL_Id",
+              "originalNumeratorNumber": "",
+              "originalNumeratorUnit": "",
+              "originalDenominatorNumber": "",
+              "originalDenominatorUnit": ""
+            },
+            {
+              "applicantIngredName": "STARCH, CORN",
+              "substanceKeyType": "APPROVAL_ID",
+              "ingredientType": "INACTIVE INGREDIENT",
+              "substanceKey": "O8232NY3SJ",
+              "basisOfStrengthSubstanceKey": "O8232NY3SJ",
+              "basisOfStrengthSubstanceKeyType": "APPROVAL_Id",
+              "originalNumeratorNumber": "",
+              "originalNumeratorUnit": "",
+              "originalDenominatorNumber": "",
+              "originalDenominatorUnit": ""
+            },
+            {
+              "applicantIngredName": "STEARIC ACID",
+              "substanceKeyType": "APPROVAL_ID",
+              "ingredientType": "INACTIVE INGREDIENT",
+              "substanceKey": "4ELV7Z65AP",
+              "basisOfStrengthSubstanceKey": "4ELV7Z65AP",
+              "basisOfStrengthSubstanceKeyType": "APPROVAL_Id",
+              "originalNumeratorNumber": "",
+              "originalNumeratorUnit": "",
+              "originalDenominatorNumber": "",
+              "originalDenominatorUnit": ""
+            },
+            {
+              "applicantIngredName": "SILICON DIOXIDE",
+              "substanceKeyType": "APPROVAL_ID",
+              "ingredientType": "INACTIVE INGREDIENT",
+              "substanceKey": "ETJ7Z6XBU4",
+              "basisOfStrengthSubstanceKey": "ETJ7Z6XBU4",
+              "basisOfStrengthSubstanceKeyType": "APPROVAL_Id",
+              "originalNumeratorNumber": "",
+              "originalNumeratorUnit": "",
+              "originalDenominatorNumber": "",
+              "originalDenominatorUnit": ""
+            },
+            {
+              "applicantIngredName": "CELLULOSE, MICROCRYSTALLINE",
+              "substanceKeyType": "APPROVAL_ID",
+              "ingredientType": "INACTIVE INGREDIENT",
+              "substanceKey": "OP1R32D61U",
+              "basisOfStrengthSubstanceKey": "OP1R32D61U",
+              "basisOfStrengthSubstanceKeyType": "APPROVAL_Id",
+              "originalNumeratorNumber": "",
+              "originalNumeratorUnit": "",
+              "originalDenominatorNumber": "",
+              "originalDenominatorUnit": ""
+            },
+            {
+              "applicantIngredName": "POVIDONE K30",
+              "substanceKeyType": "APPROVAL_ID",
+              "ingredientType": "INACTIVE INGREDIENT",
+              "substanceKey": "U725QWY32X",
+              "basisOfStrengthSubstanceKey": "U725QWY32X",
+              "basisOfStrengthSubstanceKeyType": "APPROVAL_Id",
+              "originalNumeratorNumber": "",
+              "originalNumeratorUnit": "",
+              "originalDenominatorNumber": "",
+              "originalDenominatorUnit": ""
+            }
+          ]
+        }
+      ],
+      "dosageForm": "TABLET",
+      "charNumFragments": "U01",
+      "charShape": "ROUND",
+      "charSize": "11",
+      "charColor": "WHITE",
+      "routeOfAdministration": "ORAL"
+    }
+  ]
+}

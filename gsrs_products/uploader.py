@@ -8,6 +8,8 @@ from datetime import datetime
 import logging
 import urllib3
 from urllib3.exceptions import InsecureRequestWarning
+from setproctitle import setproctitle
+setproctitle("uploader.py")
 
 urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -34,6 +36,7 @@ def delete_one(url, i, headers):
 def delete_range(url, firstId, lastId, headers):
     for number in range(firstId, lastId + 1):
         delete_one(url, number , headers)
+    logger.info("Finished deleting range")
 
 
 def upload_data(filename, data, url, headers):
@@ -49,15 +52,25 @@ def upload_data(filename, data, url, headers):
 def upload_files_in_batches(data_list, batch_size, url, headers):
     logger.info("Starting batch upload of data...")
 
+
+
     # Create a pool of workers based on the number of CPU cores
     with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+
+        # this should be imporved to use a list of filename from the zip file.
+        # so that we know the name of the file that caused an error in cases
+        # where the zip file does not have a sequences of files in the right order
+        # and the right numbers.  Or am I misunderstanding? 
+
         for i in range(0, len(data_list), batch_size):
             batch_data = data_list[i:i + batch_size]
             for index, data in enumerate(batch_data):
                 try:
                     if data is not None:
                         filename = f"data_{i + index + 1}.json"
+                        # if you are testing you may wish to comment out, and uncomment the line below 
                         pool.apply_async(upload_data, args=(filename, data, url, headers))
+                        # only uncomment for testing ... 
                         # upload_data(filename, data, url, headers)
                     else:
                         logger.warning(f"Skipping upload for data index {i + index + 1} because it is None")
@@ -84,10 +97,6 @@ def upload_files(data_zip_path, batch_size, url, headers):
 if __name__ == "__main__":
 
     # ===  common config info / begin   
-
-    # In this script, you only need to worry about these 
-    # values if you are setting useAutoload to True. 
-    # You are better off using the uploader.py script instead.
 
     _debug=debug=os.environ.get('DEBUG')
     if (_debug==None): 
@@ -123,11 +132,11 @@ if __name__ == "__main__":
 
     # Handle input folder and output zipfile path
 
-    print(len(sys.argv))
+    # print(len(sys.argv))
 
     if len(sys.argv) != 2:
         print(f"Usage: {sys.argv[0]} <input_json_zipfile_path>")
-        print(f"\nExample: python3 \$code/uploader.py processed-json-zip/all_dailymed_human_rx-jsons.zip")
+        print(f'Example: python3 $code/uploader.py processed-json-zip/all_dailymed_human_rx-jsons.zip')
         sys.exit(1)
 
     input_json_zipfile_path = sys.argv[1]
@@ -138,9 +147,7 @@ if __name__ == "__main__":
     data_zip_path = input_json_zipfile_path
 
     # firstId, LastId; one is added to last id to make it work right ... make this cleaner
-    # delete_range(urlPROD, 21, 170, headersPROD)
+    # delete_range(_url, 83845, 253761, _headers)
     # delete_one(urlPROD, 14917, headersPROD)
-
     upload_files(data_zip_path, batch_size, _url, _headers)
-
 
