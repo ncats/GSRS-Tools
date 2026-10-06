@@ -1,7 +1,7 @@
 # SD File Validator - User Guide
 
-**Version 2.1**
-**Last Updated: June 2026**
+**Version 2.2**
+**Last Updated: September 2026**
 **Author: Marlene Kim, FDA GSRS**
 **Author of JSChemify: Tyler Peryea, FDA GSRS**
 
@@ -63,13 +63,17 @@ An SD File (Structure-Data File) is a standard file format used to store chemica
 
 ### What to Include in an SD File
 
-As per the GSRS Quick Guide to Creating a Structure-Data File (SD File) for Electronic Common Technical Document (eCTD) Submissions, SD Files should be used to represent the following types of substances:
+As per the GSRS Quick Guide to Creating a Structure-Data File (SD File) for Electronic Common Technical Document (eCTD) Submissions, SD Files should be used to represent the following types of substances. See the quick guide for more comprehensive information.
 - Drug substances
+- Drug product(s)
 - Starting materials
 - Intermediates
 - Impurities
 - Degradants
-- Leachables exceeding the Analytical Evaluation Threshold (AET)
+- Leachables
+- Unique reagents
+- Nitrosamines
+- "Residual solvents" per ICH Q3C
 
 **Reagents and solvents should be excluded.**
 
@@ -89,7 +93,7 @@ The validator checks for the presence of the following data headers. While it ca
 ## 3. System Requirements
 
 - **Web Browser**: A modern web browser is required. The latest versions of Google Chrome, Mozilla Firefox, or Microsoft Edge are recommended.
-- **Files**: Only one file is required: `SD_File_Validator_2_0.html`. The chemical structure rendering library is embedded directly within this file.
+- **Files**: Only one file is required: `SD_File_Validator_2_2.html`. The chemical structure rendering library is embedded directly within this file.
 
 The tool does not require an internet connection, administrative privileges, or any additional software installation.
 
@@ -97,9 +101,9 @@ The tool does not require an internet connection, administrative privileges, or 
 
 ## 4. Setup Instructions
 
-Version 2.1 of the validator is fully self-contained in a single file, which simplifies setup considerably.
+Version 2.2 of the validator is fully self-contained in a single file, which simplifies setup considerably.
 
-1. **Obtain the File**: Download `SD_File_Validator_2_1.html`.
+1. **Obtain the File**: Download `SD_File_Validator_2_2.html`.
 2. **Save to Your Computer**: Place the file anywhere on your computer that is convenient to access.
 
 The validator is now ready to use. No additional files or configuration are needed.
@@ -110,7 +114,7 @@ The validator is now ready to use. No additional files or configuration are need
 
 ### Step 1: Open the Validator
 
-- Navigate to the location where you saved `SD_File_Validator_2_1.html`.
+- Navigate to the location where you saved `SD_File_Validator_2_2.html`.
 - Double-click the file. It will open in your default web browser.
 
 ### Step 2: Select Your SD File
@@ -216,7 +220,7 @@ To keep the report clean and readable, the validator groups identical messages. 
 
 - **Problem: The validator does not open.**
     - **Cause**: The file may not be associated with a web browser, or the browser may be blocking local file access.
-    - **Solution**: Right-click `SD_File_Validator_2_1.html` and choose "Open with" to select your preferred browser (Chrome, Firefox, or Edge).
+    - **Solution**: Right-click `SD_File_Validator_2_2.html` and choose "Open with" to select your preferred browser (Chrome, Firefox, or Edge).
 
 ---
 
@@ -229,10 +233,11 @@ To keep the report clean and readable, the validator groups identical messages. 
 
 ### Online Resources
 
-- **FDA UNII Search**: [https://precision.fda.gov/uniisearch](https://precision.fda.gov/uniisearch)
-- **NCATS GSRS Database**: [https://gsrs.ncats.nih.gov/ginas/app/ui/home](https://gsrs.ncats.nih.gov/ginas/app/ui/home)
-- **Quick Guide for DMF Submissions**: [https://www.fda.gov/drugs/drug-master-files-dmfs/drug-master-file-dmf-submission-resources](https://www.fda.gov/drugs/drug-master-files-dmfs/drug-master-file-dmf-submission-resources)
-- **Quick Guide for Other Types of Submissions (NDA, ANDA, BLA, IND)**: [https://www.fda.gov/media/161877/download?attachment](https://www.fda.gov/media/161877/download?attachment)
+- **precisionFDA UNII Search**: [https://precision.fda.gov/uniisearch](https://precision.fda.gov/uniisearch)
+- **precisionFDA-GSRS**: [https://precision.fda.gov/ginas/app/ui/](https://precision.fda.gov/ginas/app/ui/)
+- **NCATS GSRS Homepage**: [https://gsrs.ncats.nih.gov/](https://gsrs.ncats.nih.gov/)
+- **Quick Guide for Type II DMF, NDA, ANDA, and other eCTD Submissions**: [https://www.fda.gov/drugs/drug-master-files-dmfs/drug-master-file-dmf-submission-resources](https://www.fda.gov/drugs/drug-master-files-dmfs/drug-master-file-dmf-submission-resources)
+
 
 ---
 
@@ -241,8 +246,8 @@ To keep the report clean and readable, the validator groups identical messages. 
 - **Q: Does this tool send my data to the FDA?**
     - A: No. All processing happens locally in your web browser. Your data never leaves your computer.
 
-- **Q: Do I need to download any other files besides `SD_File_Validator_2_1.html`?**
-    - A: No. Version 2.1 is fully self-contained. The chemical structure rendering library is embedded directly within the HTML file, so only the single `.html` file is needed.
+- **Q: Do I need to download any other files besides `SD_File_Validator_2_2.html`?**
+    - A: No. Version 2.2 is fully self-contained. The chemical structure rendering library is embedded directly within the HTML file, so only the single `.html` file is needed.
 
 - **Q: My file has three blank lines before the `V2000` line. Is this okay?**
     - A: Yes. This is a valid header for a molecule with no name, program info, or comments. The validator will correctly parse this without generating a warning.
